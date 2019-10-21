@@ -12,9 +12,9 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 export namespace Components {
   interface AppRoot {}
   interface GameBoard {
+    'isPlayersTurn': boolean;
     'playOpponent': (column: number) => Promise<void>;
-    'playerTurn': boolean;
-    'resetGame': () => Promise<void>;
+    'reset': () => Promise<void>;
   }
   interface GameCell {
     'player': number;
@@ -51,9 +51,9 @@ declare global {
 declare namespace LocalJSX {
   interface AppRoot {}
   interface GameBoard {
+    'isPlayersTurn'?: boolean;
     'onOpponentMove'?: (event: CustomEvent<any>) => void;
     'onPlayerMove'?: (event: CustomEvent<any>) => void;
-    'playerTurn'?: boolean;
   }
   interface GameCell {
     'player'?: number;

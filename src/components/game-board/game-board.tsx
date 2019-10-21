@@ -6,7 +6,7 @@ import { Component, h, Prop, State, Event, EventEmitter, Method } from '@stencil
   shadow: false
 })
 export class GameBoard {
-  @Prop() playerTurn: boolean;
+  @Prop() isPlayersTurn: boolean;
   @State() board: Array<Array<number>> = this.generateEmptyBoard();
 
   @Event() playerMove: EventEmitter;
@@ -23,27 +23,26 @@ export class GameBoard {
   }
 
   @Method()
-  async resetGame(): Promise<void> {
+  async reset(): Promise<void> {
     this.board = this.generateEmptyBoard();
-    this.playerTurn = true;
   }
 
   @Method()
   async playOpponent(column: number): Promise<void> {
-    if (!this.playerTurn && this.checkValidity(column)) {
+    if (!this.isPlayersTurn && this.isValidMove(column)) {
       this.play(column, GameBoard.OPPONENT);
       this.opponentMove.emit(column);
     }
   }
 
   private columnClick(column: number): void {
-    if (this.playerTurn && this.checkValidity(column)) {
+    if (this.isPlayersTurn && this.isValidMove(column)) {
       this.play(column, GameBoard.PLAYER);
       this.playerMove.emit(column);
     }
   }
 
-  private checkValidity(column: number): boolean {
+  private isValidMove(column: number): boolean {
     return (
       column >= 0 &&
       column < GameBoard.COLUMN_MAX &&

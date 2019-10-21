@@ -7,25 +7,37 @@ import { Component, h, Listen, State } from '@stencil/core';
 })
 export class AppRoot {
   @State() status: string;
-  @State() playerTurn: boolean = true;
+  @State() isPlayersTurn = true;
+
+  private gameboard;
 
   @Listen('playerMove')
   playerMove(event: CustomEvent) {
-    this.playerTurn = !this.playerTurn;
     console.log('Player:', event.detail);
+    this.isPlayersTurn = false;
   }
 
   @Listen('opponentMove')
   opponentMove(event: CustomEvent) {
-    this.playerTurn = !this.playerTurn;
     console.log('Opponent:', event.detail);
+    this.isPlayersTurn = true;
+  }
+
+  private resetGame(): void {
+    this.gameboard.reset();
+    this.isPlayersTurn = true;
+  }
+
+  componentDidLoad() {
+    this.gameboard = document.querySelector('game-board');
   }
 
   render() {
     return (
       <div class="container">
-        <h1 class="status">{this.playerTurn ? 'Your turn' : 'Waiting for Opponent'}</h1>
-        <game-board playerTurn={this.playerTurn} />
+        <h1 class="status">{this.isPlayersTurn ? 'Your turn' : 'Waiting for Opponent'}</h1>
+        <game-board isPlayersTurn={this.isPlayersTurn} />
+        <button onClick={() => this.resetGame()}>Reset</button>
       </div>
     );
   }

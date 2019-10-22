@@ -15,9 +15,9 @@ io.on('connection', socket => {
   console.log('Connection to page established');
   spawnProcess();
 
-  // socket.on('player decision', message => {
-  //   console.log(`Player chose: ${message}`);
-  // });
+  socket.on('player decision', message => {
+    console.log(`Player chose: ${message}`);
+  });
 
   socket.on('disconnect', () => {
     console.log('Page disconnected');

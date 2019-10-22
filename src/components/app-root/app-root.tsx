@@ -15,8 +15,7 @@ export class AppRoot {
 
   @Listen('playerMove')
   playerMove(event: CustomEvent) {
-    console.log('Player:', event.detail);
-    this.socket.emit('player decision', event.detail);
+    this.socket.emit('human decision', event.detail);
     this.isPlayersTurn = false;
   }
 
@@ -31,6 +30,9 @@ export class AppRoot {
     this.socket.on('computer decision', (column: number) => {
       this.gameboard.playOpponent(column);
       this.isPlayersTurn = true;
+    });
+    this.socket.on('close server', () => {
+      console.warn('Disconnected from server');
     });
   }
 

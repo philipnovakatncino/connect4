@@ -4,15 +4,16 @@ const readline = require('readline').createInterface({
 });
 
 const respond = input => {
+  const output = {
+    decision: null,
+    message: ''
+  };
+
   if (input === 'quit') {
     readline.close();
+    output.message = 'quit';
   } else {
     input = parseInt(input);
-
-    const output = {
-      decision: null,
-      message: ''
-    };
 
     if (isNaN(input)) {
       output.message = "That's not a number silly";
@@ -23,9 +24,9 @@ const respond = input => {
     } else {
       output.decision = input;
     }
-
-    process.send(output);
   }
+
+  process.send(output);
 };
 
 process.on('message', input => {

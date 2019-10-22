@@ -10,7 +10,6 @@ export class GameBoard {
   @State() board: Array<Array<number>> = this.generateEmptyBoard();
 
   @Event() playerMove: EventEmitter;
-  @Event() opponentMove: EventEmitter;
 
   public static readonly PLAYER = 1;
   public static readonly OPPONENT = 2;
@@ -31,14 +30,13 @@ export class GameBoard {
   async playOpponent(column: number): Promise<void> {
     if (!this.isPlayersTurn && this.isValidMove(column)) {
       this.play(column, GameBoard.OPPONENT);
-      this.opponentMove.emit(column);
     }
   }
 
   private columnClick(column: number): void {
     if (this.isPlayersTurn && this.isValidMove(column)) {
       this.play(column, GameBoard.PLAYER);
-      this.playerMove.emit(column);
+      this.playerMove.emit(this.board);
     }
   }
 

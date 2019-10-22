@@ -6,6 +6,7 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
 let ai;
+let board;
 
 app.use(express.static(__dirname + '/www/'));
 
@@ -18,7 +19,14 @@ io.on('connection', socket => {
   spawnProcess();
 
   socket.on('player decision', input => {
-    requestDecision(input);
+    board = input;
+    console.log(board);
+    requestDecision();
+  });
+
+  socket.on('reset', input => {
+    board = input;
+    console.log(board);
   });
 
   socket.on('disconnect', () => {
@@ -34,18 +42,20 @@ const spawnProcess = () => {
   ai.on('message', output => {
     if (output.decision == null) {
       console.log(output.message);
+      requestDecision();
     } else {
-      console.log(`emitting: ${output.decision}`);
       io.emit('computer decision', output.decision);
     }
   });
 };
 
-const requestDecision = playerDecision => {
-  ai.send({
-    message: 'request decision',
-    playerDecision
-  });
+const requestDecision = () => {
+  if (ai) {
+    ai.send({
+      message: 'request decision',
+      board
+    });
+  }
 };
 
 http.listen(3000, () => {

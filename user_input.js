@@ -28,4 +28,8 @@ const respond = input => {
   }
 };
 
-process.on('message', () => readline.question('Enter a column number (0-6): ', respond));
+process.on('message', input => {
+  if (input.message === 'request decision') {
+    readline.question('Enter a column number (0-6): ', respond);
+  }
+});

@@ -45,7 +45,7 @@ export class GameBoard {
   private isValidMove(column: number): boolean {
     return (
       column >= 0 &&
-      column < GameBoard.COLUMN_MAX &&
+      column <= GameBoard.COLUMN_MAX &&
       this.board[column][GameBoard.COLUMN_MAX - 1] === 0
     );
   }

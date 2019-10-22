@@ -9,21 +9,23 @@ const respond = input => {
   } else {
     input = parseInt(input);
 
+    const output = {
+      decision: null,
+      message: ''
+    };
+
     if (isNaN(input)) {
-      console.log("That's not a number silly");
+      output.message = "That's not a number silly";
     } else if (input > 6) {
-      console.log('That number is too big.');
+      output.message = 'That number is too big.';
     } else if (input < 0) {
-      console.log('That number is too small.');
+      output.message = 'That number is too small.';
     } else {
-      console.log(`Computer chose: ${input}`);
+      output.decision = input;
     }
 
-    prompt();
+    process.send(output);
   }
 };
 
-const prompt = () => readline.question('Enter a column number (0-6): ', respond);
-
-console.log("Type 'quit' to quit.");
-prompt();
+process.on('message', () => readline.question('Enter a column number (0-6): ', respond));

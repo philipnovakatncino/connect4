@@ -5,6 +5,8 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
+let ai;
+
 app.use(express.static(__dirname + '/www/'));
 
 app.get('/', (_, response) => {
@@ -15,8 +17,8 @@ io.on('connection', socket => {
   console.log('Connection to page established');
   spawnProcess();
 
-  socket.on('player decision', message => {
-    console.log(`Player chose: ${message}`);
+  socket.on('player decision', input => {
+    requestDecision(input);
   });
 
   socket.on('disconnect', () => {
@@ -27,25 +29,22 @@ io.on('connection', socket => {
 open('http://localhost:3000');
 
 const spawnProcess = () => {
-  const child = child_process.spawn('node', ['user_input.js']);
+  ai = child_process.fork('./user_input.js');
 
-  // only necessary for user_input.js program
-  process.stdin.pipe(child.stdin);
-
-  child.stdout.on('data', buffer => {
-    const output = buffer.toString();
-
-    if (output.startsWith('Computer chose:')) {
-      const column = parseInt(output.replace(/[^0-9]/g, ''));
-      console.log(`emitting: ${column}`);
-      io.emit('computer decision', column);
+  ai.on('message', output => {
+    if (output.decision == null) {
+      console.log(output.message);
     } else {
-      console.log(`stdout: ${output}`);
+      console.log(`emitting: ${output.decision}`);
+      io.emit('computer decision', output.decision);
     }
   });
+};
 
-  child.on('exit', code => {
-    console.log(`Child process exited with code ${code}`);
+const requestDecision = playerDecision => {
+  ai.send({
+    message: 'request decision',
+    playerDecision
   });
 };
 

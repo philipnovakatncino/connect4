@@ -11,7 +11,7 @@ export class AppRoot {
   @State() isPlayersTurn = true;
 
   private gameboard;
-  private socket = io('http://localhost:3000');
+  private socket = io('http://localhost:3000', { reconnection: false });
 
   @Listen('playerMove')
   playerMove(event: CustomEvent) {

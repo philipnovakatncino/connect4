@@ -13,7 +13,7 @@ export namespace Components {
   interface AppRoot {}
   interface GameBoard {
     'isPlayersTurn': boolean;
-    'playOpponent': (column: number) => Promise<void>;
+    'playOpponent': (column: number) => Promise<boolean>;
     'reset': () => Promise<void>;
   }
   interface GameCell {
@@ -53,6 +53,7 @@ declare namespace LocalJSX {
   interface GameBoard {
     'isPlayersTurn'?: boolean;
     'onPlayerMove'?: (event: CustomEvent<any>) => void;
+    'onWeHaveAWinner'?: (event: CustomEvent<any>) => void;
   }
   interface GameCell {
     'player'?: number;

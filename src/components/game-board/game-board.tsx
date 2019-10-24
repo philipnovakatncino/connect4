@@ -10,6 +10,7 @@ export class GameBoard {
   @State() board: Array<Array<number>> = this.generateEmptyBoard();
 
   @Event() playerMove: EventEmitter;
+  @Event() weHaveAWinner: EventEmitter;
 
   public static readonly PLAYER = 1;
   public static readonly OPPONENT = 2;
@@ -27,16 +28,17 @@ export class GameBoard {
   }
 
   @Method()
-  async playOpponent(column: number): Promise<void> {
+  async playOpponent(column: number): Promise<boolean> {
     if (!this.isPlayersTurn && this.isValidMove(column)) {
-      this.play(column, GameBoard.OPPONENT);
+      return this.play(column, GameBoard.OPPONENT);
     }
   }
 
   private columnClick(column: number): void {
     if (this.isPlayersTurn && this.isValidMove(column)) {
-      this.play(column, GameBoard.PLAYER);
-      this.playerMove.emit(this.board);
+      if (!this.play(column, GameBoard.PLAYER)) {
+        this.playerMove.emit(this.board);
+      }
     }
   }
 
@@ -52,12 +54,16 @@ export class GameBoard {
     return column >= 0 && column <= GameBoard.COLUMN_MAX && row >= 0 && row <= GameBoard.ROW_MAX;
   }
 
-  private play(column: number, player: number): void {
+  private play(column: number, player: number): boolean {
     const index = this.board[column].indexOf(0);
     this.board[column][index] = player;
+    this.board = [...this.board];
     if (this.detectWin(column, index, player)) {
       console.log(`Player ${player} wins!`);
+      this.weHaveAWinner.emit(player);
+      return true;
     }
+    return false;
   }
 
   private detectWin(lastPlayColumn: number, lastPlayPosition: number, player: number): boolean {

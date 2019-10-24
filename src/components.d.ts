@@ -52,7 +52,6 @@ declare namespace LocalJSX {
   interface AppRoot {}
   interface GameBoard {
     'isPlayersTurn'?: boolean;
-    'onOpponentMove'?: (event: CustomEvent<any>) => void;
     'onPlayerMove'?: (event: CustomEvent<any>) => void;
   }
   interface GameCell {

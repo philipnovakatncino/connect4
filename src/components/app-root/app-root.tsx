@@ -1,4 +1,5 @@
 import { Component, h, Listen, State } from '@stencil/core';
+import io from 'socket.io-client';
 
 @Component({
   tag: 'app-root',
@@ -10,26 +11,29 @@ export class AppRoot {
   @State() isPlayersTurn = true;
 
   private gameboard;
+  private socket = io('http://localhost:3000', { reconnection: false });
 
   @Listen('playerMove')
   playerMove(event: CustomEvent) {
-    console.log('Player:', event.detail);
+    this.socket.emit('human decision', event.detail);
     this.isPlayersTurn = false;
-  }
-
-  @Listen('opponentMove')
-  opponentMove(event: CustomEvent) {
-    console.log('Opponent:', event.detail);
-    this.isPlayersTurn = true;
   }
 
   private resetGame(): void {
     this.gameboard.reset();
     this.isPlayersTurn = true;
+    this.socket.emit('reset');
   }
 
   componentDidLoad() {
     this.gameboard = document.querySelector('game-board');
+    this.socket.on('computer decision', (column: number) => {
+      this.gameboard.playOpponent(column);
+      this.isPlayersTurn = true;
+    });
+    this.socket.on('close server', () => {
+      console.warn('Disconnected from server');
+    });
   }
 
   render() {

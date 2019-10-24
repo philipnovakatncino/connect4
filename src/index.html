@@ -20,15 +20,5 @@
   </head>
   <body>
     <app-root></app-root>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      const socket = io('http://localhost:3000');
-      socket.on('computer decision', column => {
-        document.querySelector('game-board').playOpponent(column);
-      });
-      document.addEventListener('playerMove', column => {
-        socket.emit('player decision', column);
-      });
-    </script>
   </body>
 </html>

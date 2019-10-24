@@ -43,7 +43,7 @@ export class GameBoard {
   private isValidMove(column: number): boolean {
     return (
       column >= 0 &&
-      column < GameBoard.COLUMN_MAX &&
+      column <= GameBoard.COLUMN_MAX &&
       this.board[column][GameBoard.COLUMN_MAX - 1] === 0
     );
   }
@@ -51,6 +51,42 @@ export class GameBoard {
   private play(column: number, player: number): void {
     const index = this.board[column].indexOf(0);
     this.board[column][index] = player;
+    this.detectWin(column, index, player);
+  }
+
+  private detectWin(lastPlayColumn: number, lastPlayPosition: number, player: number): boolean {
+    let run = 0;
+    let win = false;
+
+    // vertical search
+    this.board[lastPlayColumn].forEach(row => {
+      if (row === player) {
+        run++;
+        if (run === 4) {
+          console.log('vertical win!!!', player);
+          win = true;
+        }
+      } else {
+        run = 0;
+      }
+    });
+
+    run = 0;
+
+    // horizontal search
+    this.board.forEach(column => {
+      if (column[lastPlayPosition] === player) {
+        run++;
+        if (run === 4) {
+          console.log('horizontal win!!!', player);
+          win = true;
+        }
+      } else {
+        run = 0;
+      }
+    });
+
+    return win;
   }
 
   render() {

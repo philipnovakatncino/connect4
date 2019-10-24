@@ -48,17 +48,23 @@ export class GameBoard {
     );
   }
 
+  private isValidPosition(column: number, row: number): boolean {
+    return column >= 0 && column <= GameBoard.COLUMN_MAX && row >= 0 && row <= GameBoard.ROW_MAX;
+  }
+
   private play(column: number, player: number): void {
     const index = this.board[column].indexOf(0);
     this.board[column][index] = player;
-    this.detectWin(column, index, player);
+    if (this.detectWin(column, index, player)) {
+      console.log(`Player ${player} wins!`);
+    }
   }
 
   private detectWin(lastPlayColumn: number, lastPlayPosition: number, player: number): boolean {
-    let run = 0;
     let win = false;
 
     // vertical search
+    let run = 0;
     this.board[lastPlayColumn].forEach(row => {
       if (row === player) {
         run++;
@@ -71,9 +77,12 @@ export class GameBoard {
       }
     });
 
-    run = 0;
+    if (win) {
+      return true;
+    }
 
     // horizontal search
+    run = 0;
     this.board.forEach(column => {
       if (column[lastPlayPosition] === player) {
         run++;
@@ -85,6 +94,55 @@ export class GameBoard {
         run = 0;
       }
     });
+
+    if (win) {
+      return true;
+    }
+
+    // diagonal search
+    let searchPositionX;
+    let searchPositionY;
+    let hasChangedDirection;
+
+    const initializeSearch = () => {
+      run = 1;
+      hasChangedDirection = false;
+      searchPositionX = lastPlayColumn;
+      searchPositionY = lastPlayPosition;
+    };
+
+    const checkPosition = (column: number, row: number) => this.board[column][row] === player;
+    const search = (directionX: number, directionY: number) => {
+      searchPositionX += directionX;
+      searchPositionY += directionY;
+
+      if (
+        this.isValidPosition(searchPositionX, searchPositionY) &&
+        checkPosition(searchPositionX, searchPositionY)
+      ) {
+        run++;
+        if (run == 4) {
+          win = true;
+        } else {
+          search(directionX, directionY);
+        }
+      } else if (!hasChangedDirection) {
+        hasChangedDirection = true;
+        searchPositionX = lastPlayColumn;
+        searchPositionY = lastPlayPosition;
+        search(-directionX, -directionY);
+      }
+    };
+
+    initializeSearch();
+    search(1, 1);
+
+    if (win) {
+      return true;
+    }
+
+    initializeSearch();
+    search(-1, 1);
 
     return win;
   }

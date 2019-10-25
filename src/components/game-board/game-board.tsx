@@ -155,7 +155,7 @@ export class GameBoard {
 
   render() {
     return (
-      <div class="grid">
+      <div class={`grid ${this.isPlayersTurn ? 'clickable' : ''}`}>
         {this.board.map((column, i) => (
           <div class="column" onClick={() => this.columnClick(i)}>
             {column.map(cell => (

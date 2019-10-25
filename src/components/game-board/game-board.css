@@ -5,9 +5,14 @@
 .column {
   display: inline-flex;
   flex-direction: column-reverse;
-  cursor: pointer;
 }
-.column:hover {
+
+.clickable .column {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.clickable .column:hover {
   background-color: #dcdcdc;
 }
 
@@ -26,9 +31,9 @@
 }
 
 .red {
-  background-color: red;
+  background: radial-gradient(#f10000, #bd3434);
 }
 
 .blue {
-  background-color: blue;
+  background: radial-gradient(#0023da, #21149a);
 }

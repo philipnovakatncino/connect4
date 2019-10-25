@@ -25,6 +25,10 @@ io.on('connection', socket => {
     requestDecision();
   });
 
+  socket.on('winner', winner => {
+    console.log(`Player ${winner} wins`);
+  });
+
   socket.on('reset', () => {
     board = null;
   });

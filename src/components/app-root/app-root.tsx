@@ -16,7 +16,7 @@ export class AppRoot {
   @Listen('weHaveAWinner')
   weHaveAWinner(event: CustomEvent) {
     const winner = event.detail;
-    this.socket.emit(winner);
+    this.socket.emit('winner', winner);
     this.status =
       winner === 1
         ? 'You have defeated the machine! ✊'

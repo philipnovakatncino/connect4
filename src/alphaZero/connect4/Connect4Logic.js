@@ -23,7 +23,7 @@ export default class Board {
   }
 
   withNpPieces(board) {
-    this.pieces = numjs.array(board.tolist());
+    this.pieces = board.clone();
     return this;
   }
 
@@ -70,7 +70,7 @@ export default class Board {
   isWin(color) {
     return (
       Board.checkRowsForWin(color, this.pieces) ||
-      Board.checkRowsForWin(color, this.pieces.T) ||
+      Board.checkRowsForWin(color, this.pieces.clone().T) ||
       Board.checkRowsForWin(color, Board.getDiagonalBoard(this.pieces))
     );
   }

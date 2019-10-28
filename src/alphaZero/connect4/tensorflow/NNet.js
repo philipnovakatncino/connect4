@@ -44,8 +44,8 @@ export class NNetWrapper extends NeuralNet {
       // console.log('pisData item size:', target_pis.length);
     }
 
-    let xTrain = tf.tensor3d(inputData, [total, 3, 3]);
-    xTrain = xTrain.reshape([total, 3, 3, 1]);
+    let xTrain = tf.tensor3d(inputData, [total, 7, 6]);
+    xTrain = xTrain.reshape([total, 7, 6, 1]);
 
     const yTrain1 = tf.tensor2d(pisData); // , [total, 10]);
     const yTrain2 = tf.tensor2d(vsData, [total, 1]); // 784
@@ -97,7 +97,7 @@ export class NNetWrapper extends NeuralNet {
       let input = boardNdArray.tolist();
 
       // TODO remove hard code [1,3,3]
-      input = tf.tensor3d([input], [1, 3, 3]);
+      input = tf.tensor3d([input], [1, 7, 6]);
 
       // # run
       let prediction;
@@ -113,7 +113,7 @@ export class NNetWrapper extends NeuralNet {
       } else {
         // shape: [1 set, x,y, channel(current it is dummy, only 1)]
         // use const x = tf.tensor4d([input], [1, 3, 3, 1]) or reshape
-        input = input.reshape([1, 3, 3, 1]);
+        input = input.reshape([1, 7, 6, 1]);
         prediction = this.nnet.model.predict(input);
       }
 

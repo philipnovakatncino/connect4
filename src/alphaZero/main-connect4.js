@@ -1,5 +1,5 @@
 import Coach from './Coach';
-import { Connect4Game } from './connect4/Connect4Game';
+import Connect4Game from './connect4/Connect4Game';
 import { NNetWrapper as NNet } from './connect4/tensorflow/NNet';
 
 const args = {

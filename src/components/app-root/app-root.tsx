@@ -1,5 +1,6 @@
 import { Component, h, Listen, State } from '@stencil/core';
 import io from 'socket.io-client';
+import train from '../../alphaZero/main-connect4.js';
 
 @Component({
   tag: 'app-root',
@@ -60,6 +61,7 @@ export class AppRoot {
         <h1 class="status">{this.status}</h1>
         <game-board isPlayersTurn={this.isPlayersTurn} />
         <button onClick={() => this.resetGame()}>Reset</button>
+        <button onClick={() => train()}>Reset</button>
       </div>
     );
   }

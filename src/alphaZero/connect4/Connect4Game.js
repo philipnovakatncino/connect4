@@ -6,7 +6,7 @@ export default class Connect4Game {
     this.baseBoard = new Board();
   }
 
-  getInitBoard() {
+  getInitBoardNdArray() {
     return this.baseBoard.pieces;
   }
 
@@ -22,12 +22,14 @@ export default class Connect4Game {
     const b = new Board().withNpPieces(board);
     b.addPiece(player, action);
 
-    return { boardNdArray: numjs.array(b.pieces), curPlayer: -player };
+    return { boardNdArray: b.pieces, curPlayer: -player };
   }
 
   getValidMoves(board, player) {
     const b = new Board().withNpPieces(board);
-    return numjs.array(b.getLegalMoves());
+    const validMoves = new Array(b.width).fill(0);
+    const legalMoves = b.getLegalMoves();
+    return numjs.array(validMoves.map((element, index) => legalMoves.indexOf(index) >= 0 ? 1 : 0));
   }
 
   getGameEnded(board, player) {
@@ -51,7 +53,7 @@ export default class Connect4Game {
 
   getSymmetries(board, pi) {
     const reverseBoard = board.slice(null, [null, null, -1]); // reverse each array
-    const reversePi = pi.step(-1);
+    const reversePi = [...pi].reverse();
 
     return [
       { b: board, p: pi },

@@ -91,9 +91,9 @@ export default class MCTS {
       // JavaScript: v is just a number value.
       const resp = this.nnet.predict(canonicalBoard);
       this.Ps[s] = resp.Ps;
-      const v = resp.v;// .get(0);
+      let v = resp.v;// .get(0);
 
-      const valids = this.game.getValidMoves(canonicalBoard, 1);
+      let valids = this.game.getValidMoves(canonicalBoard, 1);
       // NOTE: : Array multiplication is not matrix multiplication:
       // Python: self.Ps[s] = self.Ps[s]*valids
       this.Ps[s] = nj.multiply(this.Ps[s], valids); // # masking invalid moves
@@ -115,7 +115,7 @@ export default class MCTS {
       return v;
     }
 
-    const valids = this.Vs[s];
+    let valids = this.Vs[s];
     let cur_best = Number.NEGATIVE_INFINITY;
     let best_act = -1;
     const aSize = this.game.getActionSize();

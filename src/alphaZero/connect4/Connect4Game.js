@@ -1,5 +1,4 @@
 import numjs from 'numjs';
-import Game from '../Game';
 import Board from './Connect4Logic';
 
 export default class Connect4Game {
@@ -20,34 +19,34 @@ export default class Connect4Game {
   }
 
   getNextState(board, player, action) {
-    const b = new Board();
+    const b = new Board().withNpPieces(board);
     b.addPiece(player, action);
 
     return { board: numjs.array(b.pieces), curPlayer: -player };
   }
 
   getValidMoves(board, player) {
-    return this.baseBoard.getLegalMoves();
+    const b = new Board().withNpPieces(board);
+    return numjs.array(b.getLegalMoves());
   }
 
   getGameEnded(board, player) {
-    const b = this.baseBoard.withNpPieces(board);
-    const winState = b.getWinState();
-    if (winState.isEnded) {
-      switch (winState.winner) {
-        case null: return 1e-4; // draw has very little value
-        case player: return 1;
-        case -player: return -1;
-        default: console.error('Unexpected winstate found: ', winState);
-          return null;
-      }
-    } else {
-      return 0; // unfinished game
+    const b = new Board().withNpPieces(board);
+    if (b.isWin(player)) {
+      return 1;
     }
+    if (b.isWin(-player)) {
+      return -1;
+    }
+    if (b.hasLegalMoves()) {
+      return 0;
+    }
+
+    return 1e-4;
   }
 
   getCanonicalForm(board, player) {
-    return nj.multiply(board, player);
+    return numjs.multiply(board, player);
   }
 
   getSymmetries(board, pi) {
@@ -61,6 +60,6 @@ export default class Connect4Game {
   }
 
   stringRepresentation(board) {
-    return this.baseBoard.withNpPieces(board);
+    return JSON.stringify(board);
   }
 }

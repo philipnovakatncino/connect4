@@ -1,24 +1,30 @@
+const numjs = require('numjs');
+
 export default class Board {
   constructor(height = 6, width = 7) {
     this.height = height;
     this.width = width;
-
-    this.pieces = new Array(width).fill(0).map(() => new Array(height).fill(0));
+    this.pieces = numjs.zeros([this.width, this.height]);
   }
 
   getLegalMoves() {
-    return this.pieces
-      .map((column, index) => (column.indexOf(0) >= 0 ? index : -1))
-      .filter(move => move.y !== -1);
+    return this.pieces.tolist()
+      .map((column, index) => column.indexOf(0) >= 0 ? index : -1 )
+      .filter(move => move !== -1);
   }
 
   hasLegalMoves() {
     for (let col = 0; col < this.width; col++) {
-      if (this.pieces[col].indexOf(0) >= 0) {
+      if (!this.pieces.get(col, -1)) {
         return true;
       }
     }
     return false;
+  }
+
+  withNpPieces(board) {
+    this.pieces = numjs.array(board.tolist());
+    return this;
   }
 
   static checkRowsForWin(color, board) {
@@ -42,14 +48,6 @@ export default class Board {
     return false;
   }
 
-  static rotateBoard(board) {
-    return Board.transposeBoard(board).map(row => row.reverse());
-  }
-
-  static transposeBoard(board) {
-    return board[0].map((column, index) => board.map(row => row[index]));
-  }
-
   static getDiagonalsOffBoard(board) {
     const diagonalBoard = [];
 
@@ -64,23 +62,24 @@ export default class Board {
 
   static getDiagonalBoard(board) {
     return [
-      ...this.getDiagonalsOffBoard(board),
-      ...this.getDiagonalsOffBoard(this.rotateBoard(board)),
+      ...this.getDiagonalsOffBoard(board.tolist()),
+      ...this.getDiagonalsOffBoard(numjs.rot90(board).tolist()),
     ];
   }
 
   isWin(color) {
     return (
       Board.checkRowsForWin(color, this.pieces) ||
-      Board.checkRowsForWin(color, Board.transposeBoard(this.pieces)) ||
+      Board.checkRowsForWin(color, this.pieces.T) ||
       Board.checkRowsForWin(color, Board.getDiagonalBoard(this.pieces))
     );
   }
 
   addPiece(color, column) {
-    const row = this.pieces[column].indexOf(0);
-    if (row >= 0 && this.pieces[column][row] === 0) {
-      this.pieces[column][row] = color;
+    const col = this.pieces.pick(column).tolist();
+    const row = col.indexOf(0);
+    if (row >= 0 && col[row] === 0) {
+      this.pieces.set(column,row,color);
     } else {
       throw new Error('already colored, wrong');
     }

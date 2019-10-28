@@ -1,6 +1,6 @@
 import Coach from './Coach';
 import { Connect4Game } from './connect4/Connect4Game';
-import { NNetWrapper as NNet } from './tictactoe/tensorflow/NNet';
+import { NNetWrapper as NNet } from './connect4/tensorflow/NNet';
 
 const args = {
   numIters: 3,
@@ -26,7 +26,7 @@ export function getTrainedNN() {
 }
 
 export default async function train() {
-  const g = new TicTacToeGame();
+  const g = new Connect4Game();
   const nnet = new NNet(g);
 
   trainedNN = nnet;

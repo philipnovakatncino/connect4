@@ -22,7 +22,7 @@ export default class Connect4Game {
     const b = new Board().withNpPieces(board);
     b.addPiece(player, action);
 
-    return { board: numjs.array(b.pieces), curPlayer: -player };
+    return { boardNdArray: numjs.array(b.pieces), curPlayer: -player };
   }
 
   getValidMoves(board, player) {
@@ -50,8 +50,8 @@ export default class Connect4Game {
   }
 
   getSymmetries(board, pi) {
-    const reverseBoard = board.map(col => col.reverse());
-    const reversePi = pi.reverse();
+    const reverseBoard = board.slice(null, [null, null, -1]); // reverse each array
+    const reversePi = pi.step(-1);
 
     return [
       { b: board, p: pi },

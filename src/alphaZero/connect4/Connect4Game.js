@@ -8,20 +8,18 @@ export default class Connect4Game {
   }
 
   getInitBoard() {
-    return this.baseBoard.npPieces;
+    return this.baseBoard.pieces;
   }
 
   getBoardSize() {
-    console.log(this);
-    return { a: 6, b: 7 };
+    return { a: this.baseBoard.height, b: this.baseBoard.width };
   }
 
   getActionSize() {
-    return (this.a * this.b) + 1;
+    return this.baseBoard.width;
   }
 
   getNextState(board, player, action) {
-    console.log(this);
     const b = new Board();
     b.addPiece(player, action);
 
@@ -49,12 +47,10 @@ export default class Connect4Game {
   }
 
   getCanonicalForm(board, player) {
-    console.log(this);
     return nj.multiply(board, player);
   }
 
   getSymmetries(board, pi) {
-    console.log(this);
     const reverseBoard = board.map(col => col.reverse());
     const reversePi = pi.reverse();
 

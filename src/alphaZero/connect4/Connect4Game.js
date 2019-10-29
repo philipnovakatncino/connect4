@@ -11,7 +11,7 @@ export default class Connect4Game {
   }
 
   getBoardSize() {
-    return { a: this.baseBoard.height, b: this.baseBoard.width };
+    return { a: this.baseBoard.width, b: this.baseBoard.height };
   }
 
   getActionSize() {
